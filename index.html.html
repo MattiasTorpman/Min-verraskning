@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min överraskning till dig ❤️</title>
+<style>
+:root{
+  --bg1:#2a0e19;
+  --bg2:#6d263e;
+  --card:rgba(255,255,255,.11);
+  --text:#fff8f5;
+  --muted:#f4dce2;
+  --accent:#ffd0dc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+  font-family: Georgia, "Times New Roman", serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.12), transparent 22rem),
+    radial-gradient(circle at 80% 85%, rgba(255,180,200,.12), transparent 25rem),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  padding:20px;
+}
+.app{width:min(100%,560px); min-height:min(760px,calc(100vh - 40px)); display:flex; align-items:center}
+.card{
+  width:100%; padding:36px 28px 30px; border-radius:28px;
+  background:var(--card); border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 20px 70px rgba(0,0,0,.28); backdrop-filter:blur(10px);
+  text-align:center;
+}
+.heart{font-size:42px; margin-bottom:8px}
+.step{font-family:Arial,sans-serif; letter-spacing:1.8px; text-transform:uppercase; font-size:12px; color:var(--accent); margin-bottom:14px}
+h1{font-size:clamp(30px,8vw,46px); line-height:1.05; margin:0 0 24px}
+p{font-size:19px; line-height:1.65; margin:0 0 16px}
+.destination{font-size:34px; font-weight:bold; letter-spacing:1px; margin:18px 0}
+button{
+  width:100%; border:0; border-radius:16px; padding:17px 18px; margin-top:20px;
+  background:linear-gradient(135deg,#ffe1e8,#f3a7bd); color:#4b1525;
+  font-size:17px; font-weight:bold; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+button:active{transform:scale(.98)}
+.dots{display:flex; justify-content:center; gap:6px; margin-top:22px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28)}
+.dot.active{background:#fff}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app"><main class="card" id="card"></main></div>
+
+<script>
+const steps = [
+{
+  heart:"❤️", step:"Min överraskning till dig",
+  title:"Den här helgen handlar om oss.",
+  text:`<p>Ingen plan att läsa igenom.<br>Inget schema att hålla koll på.</p>
+  <p>Bara du och jag – och ett litet äventyr som avslöjas längs vägen. ❤️</p>
+  <p><strong>Är du redo?</strong></p>`,
+  button:"❤️ Öppna första ledtråden"
+},
+{
+  heart:"🎒", step:"Steg 1 – Förberedelser", title:"Dags att göra sig redo.",
+  text:`<p>Packa för en liten resa där både bekväma och lite finare kläder kan komma till användning.</p>
+  <p>Mer än så tänker jag inte avslöja än… 😉</p>
+  <p>Men jag kan lova en sak:</p><p><strong>Det kommer bli en helg för oss. ❤️</strong></p>`
+},
+{
+  heart:"🚗", step:"Steg 2 – Nu börjar det", title:"Nu börjar vårt lilla äventyr.",
+  text:`<p>Hoppa in i bilen.</p><p>Vart vi ska?</p><p>Det får du veta längs vägen. 😏❤️</p>`
+},
+{
+  heart:"🏡", step:"Steg 3 – En liten ledtråd", title:"Dags för nästa ledtråd…",
+  text:`<p>Vi är på väg mot en plats där tiden får gå lite långsammare.</p>
+  <p>Tänk röda stugor.<br>Tänk vacker natur.<br>Tänk utsikt över ett stort och glittrande vatten.</p>
+  <p>Och kanske…</p><p>lite extra tid för bara oss. ❤️</p>`
+},
+{
+  heart:"🏨", step:"Steg 4 – Avslöjandet", title:"Nu är det dags att avslöja vart vi ska!",
+  text:`<div class="destination">❤️ TÄLLBERG ❤️</div>
+  <p>En av Dalarnas allra mysigaste platser.</p>
+  <p>Och här ska vi tillbringa vår natt…</p>
+  <p><strong>Gyllene Hornet.</strong></p>
+  <p>Nu kan helgen börja på riktigt. ❤️</p>`
+},
+{
+  heart:"✨", step:"Steg 5 – Kvällen väntar", title:"Vi har kommit fram.",
+  text:`<p>Nu är det dags att landa lite, göra oss i ordning och bara njuta av att vara här.</p>
+  <p>Men kvällen är inte slut än…</p><p><strong>Nästa stopp väntar snart. ❤️</strong></p>`
+},
+{
+  heart:"🍽️", step:"Steg 6 – Dags för middag", title:"Nu är det dags att sätta sig ner.",
+  text:`<p>Slappna av och njut.</p><p>Ingen stress.<br>Inga tider att passa.</p>
+  <p>Bara god mat, något gott att dricka…</p><p>och <strong>du och jag. ❤️</strong></p>`
+},
+{
+  heart:"🌙", step:"Steg 7 – Kvällens nästa lilla äventyr", title:"Middagen är över.",
+  text:`<p>Men jag tycker inte riktigt att vi ska gå direkt tillbaka och avsluta kvällen än.</p>
+  <p>Ta på dig något varmt.</p>
+  <p>Nu väntar en liten promenad tillsammans genom Tällbergs kvällslugn.</p>
+  <p><strong>Hand i hand. ❤️</strong></p>`
+},
+{
+  heart:"🍷", step:"Steg 8 – Kvällens sista överraskning", title:"Nu är det dags att gå tillbaka.",
+  text:`<p>Kvällen är nästan slut…</p><p>men inte riktigt än. 😉</p>
+  <p>På rummet väntar något att skåla med.</p>
+  <p>Ett glas vin.<br>Lugnet efter en fin dag.</p>
+  <p>Och lite tid där resten av världen får vänta. ❤️</p>`
+},
+{
+  heart:"☀️", step:"Steg 9 – En ny dag", title:"God morgon, älskling. ❤️",
+  text:`<p>Nu väntar en lång och lugn hotellfrukost tillsammans.</p>
+  <p>Ingen brådska.</p><p>Bara vi.</p>
+  <p><strong>Äta, prata, skratta…</strong></p>
+  <p>och njuta av morgonen tillsammans. ❤️</p>
+  <p>För vårt lilla äventyr är inte över än. 😏</p>`
+},
+{
+  heart:"🚗", step:"Steg 10 – Dags att åka vidare", title:"Nu är det dags att packa ihop.",
+  text:`<p>Vi lämnar vårt lilla hotell för den här gången.</p>
+  <p>Men vi är inte på väg hem än.</p>
+  <p>Ett nytt stopp väntar.</p>
+  <p>En plats där <strong>Siljan</strong> spelar huvudrollen…</p>
+  <p>Men exakt vart vi ska?</p><p><strong>Det får du avslöja på nästa sida. ❤️</strong></p>`
+},
+{
+  heart:"🌊", step:"Steg 11 – Nästa destination", title:"Nu är det dags att avslöja nästa stopp!",
+  text:`<p>Vi åker till…</p><div class="destination">RÄTTVIK ❤️</div>
+  <p>Där väntar en promenad ut över vattnet på en plats som sträcker sig längre än man kanske först tror.</p>
+  <p>Ta på dig skorna.</p><p>Nu ska vi ut på <strong>Sveriges längsta träbrygga.</strong> 🌊</p>`
+},
+{
+  heart:"☕", step:"Steg 12 – En välförtjänt paus", title:"Efter vår promenad…",
+  text:`<p>…tycker jag att vi har gjort oss förtjänta av något gott.</p>
+  <p>Men vad är egentligen en mysig dag utan…</p>
+  <div class="destination">FIKA? ☕❤️</div>
+  <p>Nu är det dags att slå oss ner en stund.</p>
+  <p>Något gott att äta.<br>Något gott att dricka.</p>
+  <p>Och kanske bara fortsätta prata om ingenting alls.</p>`
+},
+{
+  heart:"🥪", step:"Steg 13 – Nästa lilla uppdrag", title:"Vi är inte riktigt klara här än.",
+  text:`<p>Innan vi åker vidare har vi ett litet uppdrag.</p>
+  <p>Vi ska hitta något gott att ta med oss.</p>
+  <p>En lätt lunch.</p>
+  <p>Men <strong>varför vi ska äta den där vi ska…</strong></p>
+  <p>det får du inte veta riktigt än. 😉</p>`
+},
+{
+  heart:"🚗", step:"Steg 14 – En sista ledtråd", title:"Nu är det dags att åka vidare.",
+  text:`<p>Dagens sista stopp väntar.</p>
+  <p>Vi ska uppåt…</p>
+  <p>till en plats där man får se Dalarna från ett helt annat perspektiv.</p>
+  <p>Ta med lunchen.</p><p>Och håll ögonen öppna på vägen.</p>
+  <p><strong>Vart tror du att vi är på väg? ❤️</strong></p>`
+},
+{
+  heart:"🌄", step:"Steg 15 – Avslöjandet", title:"Nu är vi nästan framme…",
+  text:`<p>Dags att avslöja dagens sista destination.</p>
+  <div class="destination">VIDABLICK ❤️</div>
+  <p>Här väntar en av Dalarnas vackraste utsikter.</p>
+  <p>Ta fram lunchen.</p><p>Sätt dig ner tillsammans med mig.</p>
+  <p>Och titta ut över Siljan.</p><p>Ta ett djupt andetag.</p>
+  <p>Ibland behöver man faktiskt inte göra mer än så här.</p>
+  <p><strong>Bara vara. Tillsammans. ❤️</strong></p>`
+},
+{
+  heart:"🚗", step:"Steg 16 – Dags att åka hem", title:"Nu börjar vårt lilla äventyr närma sig sitt slut.",
+  text:`<p>Det är dags att sätta sig i bilen och åka hem igen.</p>
+  <p>Men innan vi gör det vill jag bara säga…</p>
+  <p><strong>tack för att du följde med.</strong></p>
+  <p>Tack för att du är du.</p>
+  <p>Och tack för att jag får dela sådana här stunder med dig. ❤️</p>`
+},
+{
+  heart:"❤️", step:"Ett sista meddelande", title:"Jag hoppas att den här helgen har gett oss något viktigt.",
+  text:`<p>Mer än ett fint hotell, god mat eller vackra platser.</p>
+  <p><strong>Tid tillsammans.</strong></p>
+  <p>Tid att skratta.<br>Tid att prata.<br>Tid att bara vara vi.</p>
+  <p>Och förhoppningsvis några fina minnen som vi kan bära med oss länge.</p>
+  <p><strong>Jag älskar dig. ❤️</strong></p>`,
+  button:"❤️ Börja om från början"
+}
+];
+
+let current = Number(localStorage.getItem("myshelg-step") || 0);
+const card = document.getElementById("card");
+
+function render(){
+  const s = steps[current];
+  const last = current === steps.length - 1;
+  card.innerHTML = `
+    <div class="heart">${s.heart}</div>
+    <div class="step">${s.step}</div>
+    <h1>${s.title}</h1>
+    <div>${s.text}</div>
+    <button id="next">${s.button || "Nästa ledtråd ❤️"}</button>
+    <div class="dots">${steps.map((_,i)=>`<span class="dot ${i===current?"active":""}"></span>`).join("")}</div>
+  `;
+  document.getElementById("next").onclick = () => {
+    current = last ? 0 : current + 1;
+    localStorage.setItem("myshelg-step", current);
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+}
+render();
+</script>
+</body>
+</html>
