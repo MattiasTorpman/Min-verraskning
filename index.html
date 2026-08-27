@@ -42,7 +42,47 @@ button{
   font-size:17px; font-weight:bold; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 button:active{transform:scale(.98)}
-.dots{display:flex; justify-content:center; gap:6px; margin-top:22px}
+.buttons{
+2
+display:flex;
+3
+gap:12px;
+4
+margin-top:20px;
+5
+}
+6
+ 
+7
+.buttons button{
+8
+margin-top:0;
+9
+}
+10
+ 
+11
+#prev{
+12
+width:40%;
+13
+background:rgba(255,255,255,.18);
+14
+color:white;
+15
+border:1px solid rgba(255,255,255,.2);
+16
+}
+17
+ 
+18
+#next{
+19
+flex:1;
+20
+}
+21
+  .dots{display:flex; justify-content:center; gap:6px; margin-top:22px}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28)}
 .dot.active{background:#fff}
 .hidden{display:none}
@@ -189,22 +229,101 @@ let current = Number(localStorage.getItem("myshelg-step") || 0);
 const card = document.getElementById("card");
 
 function render(){
-  const s = steps[current];
-  const last = current === steps.length - 1;
-  card.innerHTML = `
-    <div class="heart">${s.heart}</div>
-    <div class="step">${s.step}</div>
-    <h1>${s.title}</h1>
-    <div>${s.text}</div>
-    <button id="next">${s.button || "Nästa ledtråd ❤️"}</button>
-    <div class="dots">${steps.map((_,i)=>`<span class="dot ${i===current?"active":""}"></span>`).join("")}</div>
-  `;
-  document.getElementById("next").onclick = () => {
-    current = last ? 0 : current + 1;
-    localStorage.setItem("myshelg-step", current);
-    render();
-    window.scrollTo({top:0,behavior:"smooth"});
-  };
+2
+const s = steps[current];
+3
+const last = current === steps.length - 1;
+4
+ 
+5
+const navigation =
+6
+current === 0
+7
+? `<button id="next">${s.button || "Nästa ledtråd ❤️"}</button>`
+8
+: `
+9
+<div class="buttons">
+10
+<button id="prev">⬅ Tillbaka</button>
+11
+<button id="next">${s.button || "Nästa ledtråd ❤️"}</button>
+12
+</div>
+13
+`;
+14
+ 
+15
+card.innerHTML = `
+16
+<div class="heart">${s.heart}</div>
+17
+<div class="step">${s.step}</div>
+18
+<h1>${s.title}</h1>
+19
+<div>${s.text}</div>
+20
+ 
+21
+${navigation}
+22
+ 
+23
+<div class="dots">
+24
+${steps.map((_,i)=>
+25
+`<span class="dot ${i===current ? "active" : ""}"></span>`
+26
+).join("")}
+27
+</div>
+28
+`;
+29
+ 
+30
+document.getElementById("next").onclick = () => {
+31
+current = last ? 0 : current + 1;
+32
+localStorage.setItem("myshelg-step", current);
+33
+render();
+34
+window.scrollTo({top:0,behavior:"smooth"});
+35
+};
+36
+ 
+37
+const prev = document.getElementById("prev");
+38
+ 
+39
+if(prev){
+40
+prev.onclick = () => {
+41
+if(current > 0){
+42
+current--;
+43
+localStorage.setItem("myshelg-step", current);
+44
+render();
+45
+window.scrollTo({top:0,behavior:"smooth"});
+46
+}
+47
+};
+48
+}
+49
 }
 render();
 </script>
